@@ -49,6 +49,7 @@
 PUBLIC void COMM_Init(void);
 PUBLIC void COMM_Update(void);
 PUBLIC Ret_t COMM_CheckCRC(S_COMMAND* cmd);
+PUBLIC Ret_t COMM_SendCommand(S_COMMAND* cmd);
 
 #endif // COMM_H
 //------------------------------------------------------------------------------

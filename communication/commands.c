@@ -15,7 +15,8 @@
 //------------------------------------------------------------------------------
 #include "commands_table.h"
 #include "commands.h"
-
+#include "comm.h"
+#include <string.h>
 //------------------------------------------------------------------------------
 //                                                               Defines & Types
 //------------------------------------------------------------------------------
@@ -63,8 +64,15 @@ Ret_t CMD_Execute(S_COMMAND* cmd)
  */
 void CMD_TestCommand(S_COMMAND* cmd)
 {
+	S_COMMAND reply;
+
 	DDRB = (1<<DDB5);
 	PORTB ^= (1<<PB5);
+
+	reply.cmd = 11;
+	reply.payload = 4;
+	memcpy(reply.data, (UINT8 [4]) {1, 2, 4, 8}, 4 * sizeof(UINT8));
+	COMM_SendCommand(&reply);
 }
 //------------------------------------------------------------------------------
 //                                                           Fonctions internes

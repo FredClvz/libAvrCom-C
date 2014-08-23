@@ -193,6 +193,12 @@ void _SendCommand(S_COMMAND* cmd)
 	 *
 	 * there is actually the Uart_sendBuffer function, but we go back to point 1.,
 	 * and we do not want our software to look like some famous regulator's */
+
+	/* Header */
+	UART_Write_u8(COMM_HEADER_1);
+	UART_Write_u8(COMM_HEADER_2);
+
+	/* Packet's core data*/
 	UART_Write_u8(cmd->cmd);
 	UART_Write_u8(cmd->payload);
 	for (i = 0; i < cmd->payload; ++i)
@@ -200,7 +206,8 @@ void _SendCommand(S_COMMAND* cmd)
 		UART_Write_u8(cmd->data[i]);
 	}
 
-	/* May not seem to be the most efficient way here, but I count on the compiler's optimisation
+	/* CRC...
+	 * May not seem to be the most efficient way here, but I count on the compiler's optimisation
 	 * to unroll the loop. That way the code is more portable without loosing on performances. */
 	for (i = 0; i < CFG_COMM_CRC_LEN; ++i)
 	{
