@@ -24,7 +24,7 @@
 //                                                                     Variables
 //------------------------------------------------------------------------------
 // Note : OBLIGATOIREMENT static
-extern const S_CommandTableElt CommandTable[];
+extern const S_CommandTableElt CommandTable[]; //reference to the lookup table.
 
 //------------------------------------------------------------------------------
 //                                             Prototypes des fonctions internes
@@ -34,11 +34,6 @@ extern const S_CommandTableElt CommandTable[];
 //------------------------------------------------------------------------------
 //                                                           Fonctions exportees
 //------------------------------------------------------------------------------
-
-void CMD_Init(void)
-{
-  //Do nothing...
-}
 
 /* Search for the callback linked to a given command ID
  * and execute it. Returns Ret_OK if the command exists,

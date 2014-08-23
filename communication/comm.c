@@ -35,8 +35,14 @@ typedef enum
 {
 	PARSER_IDLE = 0,              //Doing nothing
 	PARSER_HEADER_ONLY,           //Has received a start sequence
-	PARSER_PACKET_INCOMPLETE     //Waiting for the cmd, payload, data and so on.
+	PARSER_PACKET_INCOMPLETE      //Waiting for the cmd, payload, data and so on.
 } E_PARSERSTATE;
+
+typedef enum
+{
+	CRC_CHECK,
+	CRC_WRITE
+} E_CRC_MODE;
 
 typedef struct
 {
@@ -55,6 +61,8 @@ static S_COMM Com;
 //                                             Prototypes des fonctions internes
 //------------------------------------------------------------------------------
 // Note : OBLIGATOIREMENT static
+static Ret_t _ComputeCRC(S_COMMAND* cmd, E_CRC_MODE mode);
+static void _SendCommand(S_COMMAND* cmd);
 
 //------------------------------------------------------------------------------
 //                                                           Fonctions exportees
@@ -127,7 +135,10 @@ void COMM_Update(void)
 		}
 	}
 
-	//TODO: amŽliorer, c'est temporaire a
+	/*TODO: amŽliorer, c'est temporaire a.
+	 * ex: mettre en place une file pour les commandes ˆ traiter, et gŽrer
+	 * a ailleurs, pour plus de portabilitŽ.
+	 */
 	if (command.eCommandStatus == COMMAND_NEW)
 	{
 		COMM_CheckCRC(&command);
@@ -143,8 +154,57 @@ Ret_t COMM_CheckCRC(S_COMMAND* cmd)
 	cmd->eCommandStatus = COMMAND_CHECKED;
 	return RET_OK;
 }
+
+/* Build and send a packet from a command.
+ * The CRC and Status fields do not need to be filled */
+Ret_t COMM_SendCommand(S_COMMAND* cmd)
+{
+	if (cmd->payload > CFG_COMM_MAX_CMD_DATA)
+		return RET_ERROR;
+
+	_ComputeCRC(cmd, CRC_WRITE);
+	_SendCommand(cmd);
+	return RET_OK;
+}
+
 //------------------------------------------------------------------------------
 //                                                           Fonctions internes
 //------------------------------------------------------------------------------
+/* Compute the checksum for a given command.
+ * The function can be used by two ways:
+ *   1. Check a CRC (when mode = CRC_CHECK). It will return Ret_OK if the CRC
+ *      is OK. Ret_Error otherwise
+ *   2. Compute a CRC before sending a packet. here, mode = CRC_WRITE. Ret_OK will
+ *      always be returned.
+ */
+Ret_t _ComputeCRC(S_COMMAND* cmd, E_CRC_MODE mode)
+{
+	//TODO
+	return RET_OK;
+}
 
+/* Send a command to the UART. */
+void _SendCommand(S_COMMAND* cmd)
+{
+	UINT8 i;
+	/* We do not do a memcpy for several reasons:
+	 * 1. structure padding is compiler dependent.
+	 * 2. not really easy to do with a ring buffer.
+	 *
+	 * there is actually the Uart_sendBuffer function, but we go back to point 1.,
+	 * and we do not want our software to look like some famous regulator's */
+	UART_Write_u8(cmd->cmd);
+	UART_Write_u8(cmd->payload);
+	for (i = 0; i < cmd->payload; ++i)
+	{
+		UART_Write_u8(cmd->data[i]);
+	}
+
+	/* May not seem to be the most efficient way here, but I count on the compiler's optimisation
+	 * to unroll the loop. That way the code is more portable without loosing on performances. */
+	for (i = 0; i < CFG_COMM_CRC_LEN; ++i)
+	{
+		UART_Write_u8(cmd->crc[i]);
+	}
+}
 //------------------------------------------------------------------------------

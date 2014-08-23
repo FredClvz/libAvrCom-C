@@ -33,7 +33,7 @@ typedef enum
 {
 	COMMAND_EMPTY = 0,  //No new command, or previous command rejected (bad crc?)
 	COMMAND_NEW,        //Command needs to be checked first (CRC)
-	COMMAND_CHECKED     //Command is OK. Waiting for treatment.
+	COMMAND_CHECKED,    //Command is OK. Waiting for treatment.
 } E_COMMAND_STATUS;
 
 typedef struct
@@ -53,7 +53,6 @@ typedef struct
 //                                                           Fonctions exportees
 //------------------------------------------------------------------------------
 
-PUBLIC void CMD_Init(void);
 PUBLIC Ret_t CMD_Execute(S_COMMAND* cmd);
 PUBLIC void CMD_TestCommand(S_COMMAND* cmd);
 
