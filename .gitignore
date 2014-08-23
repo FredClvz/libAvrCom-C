@@ -1,0 +1,14 @@
+.DS_Store
+.cproject
+.project
+.settings/
+*.o
+*.d
+*.bin
+*.eep
+*.elf
+*.map
+*.lss
+*.sym
+*.hex
+*.*~
