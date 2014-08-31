@@ -180,6 +180,11 @@ Ret_t COMM_SendCommand(S_COMMAND* cmd)
 Ret_t _ComputeCRC(S_COMMAND* cmd, E_CRC_MODE mode)
 {
 	//TODO
+	if(mode==CRC_WRITE)
+	{
+		cmd->crc[0] = 0xAA;
+		cmd->crc[1] = 0xBB;
+	}
 	return RET_OK;
 }
 
@@ -198,7 +203,7 @@ void _SendCommand(S_COMMAND* cmd)
 	UART_Write_u8(COMM_HEADER_1);
 	UART_Write_u8(COMM_HEADER_2);
 
-	/* Packet's core data*/
+	/* Packet's core data */
 	UART_Write_u8(cmd->cmd);
 	UART_Write_u8(cmd->payload);
 	for (i = 0; i < cmd->payload; ++i)
@@ -208,7 +213,7 @@ void _SendCommand(S_COMMAND* cmd)
 
 	/* CRC...
 	 * May not seem to be the most efficient way here, but I count on the compiler's optimisation
-	 * to unroll the loop. That way the code is more portable without loosing on performances. */
+	 * to unroll the loop. That way the code is easier to modify without loosing on performance. */
 	for (i = 0; i < CFG_COMM_CRC_LEN; ++i)
 	{
 		UART_Write_u8(cmd->crc[i]);

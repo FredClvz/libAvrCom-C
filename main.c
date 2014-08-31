@@ -6,15 +6,38 @@
 #include "comm.h"
 #include "uart.h"
 
-int main (void){
-  // test_basic();
-  COMM_Init();
+#define DELTA 1
+void SendDummyCommand(void);
 
+int main (void){
+
+  COMM_Init();
+  UINT8 dly = DELTA;
   for (;;)
   {
 	  COMM_Update();
 	  _delay_ms(100);
 
+	  dly--;
+	  if(!dly)
+	  {
+		  dly = DELTA;
+		  SendDummyCommand();
+	  }
   }
   return 1;
+}
+
+void SendDummyCommand(void)
+{
+	static UINT16 cnt = 0;
+	S_COMMAND cmd;
+
+	cmd.cmd = 0x02;
+	cmd.payload = 2;
+	cmd.data[0] = cnt >> 8;
+	cmd.data[1] = cnt & 0xFF;
+
+	COMM_SendCommand(&cmd);
+	cnt++;
 }
