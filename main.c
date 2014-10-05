@@ -16,7 +16,7 @@ int main (void){
   for (;;)
   {
 	  COMM_Update();
-	  _delay_ms(100);
+	  _delay_ms(10);
 
 	  dly--;
 	  if(!dly)

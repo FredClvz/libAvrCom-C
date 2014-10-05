@@ -32,7 +32,7 @@ typedef struct
 }S_CommandTableElt;
 
 /* A command pointed to should have a definition similar to the following:
- * void function(S_COMMAND$ cmd)
+ * void function(S_COMMAND* cmd)
  */
 const S_CommandTableElt CommandTable[] =
 {
