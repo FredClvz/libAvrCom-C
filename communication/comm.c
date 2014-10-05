@@ -84,6 +84,8 @@ void COMM_Update(void)
 	static E_PARSERSTATE eStatus = PARSER_IDLE;
 	UINT8 tmp;
 
+	/* Handles possible loss of data if the comm. update function
+	 * has not been called for some time for ex. */
 	if (!RNGB_isDataConsistent(pRxBuffer))
 	{
 		eStatus = PARSER_IDLE;
@@ -114,18 +116,18 @@ void COMM_Update(void)
 	if (eStatus == PARSER_HEADER_ONLY
 		&& RNGB_Count(pRxBuffer) >= 2) //Wait for command & payload
 	{
-		UINT8 pl= 0;
-		RNGB_Spy(pRxBuffer, 1, &pl);
+		UINT8 plSz= 0; //Payload size
+		RNGB_Spy(pRxBuffer, 1, &plSz);
 
-		tmp = 2 + CFG_COMM_CRC_LEN + pl; /* cmd, pl, data[pl], crc[2] */
+		tmp = 2 + CFG_COMM_CRC_LEN + plSz; /* cmd, pl, data[pl], crc[2] */
 		/* check if the whole packet is in the buffer */
 		if (RNGB_Count(pRxBuffer) >= tmp)
 		{
 			RNGB_Get(pRxBuffer, &(command.cmd));
 			RNGB_Get(pRxBuffer, &(command.payload));
-			if (pl <= CFG_COMM_MAX_CMD_DATA)
+			if (plSz <= CFG_COMM_MAX_CMD_DATA)
 			{
-				for(tmp = 0; pl; tmp++, pl--)
+				for(tmp = 0; plSz; tmp++, plSz--)
 					RNGB_Get(pRxBuffer, &(command.data[tmp]));
 			}
 			RNGB_Get(pRxBuffer, &(command.crc[0]));

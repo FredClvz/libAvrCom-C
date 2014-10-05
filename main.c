@@ -33,7 +33,7 @@ void SendDummyCommand(void)
 	static UINT16 cnt = 0;
 	S_COMMAND cmd;
 
-	cmd.cmd = 0x02;
+	cmd.cmd = 18;
 	cmd.payload = 2;
 	cmd.data[0] = cnt >> 8;
 	cmd.data[1] = cnt & 0xFF;
