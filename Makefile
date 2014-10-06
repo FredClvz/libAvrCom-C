@@ -15,17 +15,19 @@ OPTIMIZATION = s
 TARGET       = avr-enm
 #test/test_basic.c test/test_uart.c test/test_ringbuff.c
 SRC          =  \
-				drivers/uart.c \
-               	communication/comm.c \
-				communication/commands.c \
-               	util/ringbuffer.c \
-               	main.c
+                sys/uart.c \
+                sys/comm.c \
+                sys/commands.c \
+                sys/main.c \
+                lib/ringbuffer.c \
+                app/CMD.c \
+                app/APP.c
+
                
 INCLUDES     = -I . \
-               -I ./test \
-               -I ./drivers \
-               -I ./communication \
-               -I ./util
+               -I ./app \
+               -I ./lib \
+               -I ./sys
                
 CC_FLAGS     = $(INCLUDES)
 LD_FLAGS     =

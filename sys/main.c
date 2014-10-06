@@ -2,42 +2,21 @@
 #include <util/delay.h>
 
 #include "common.h"
-//#include "tests.h"
 #include "comm.h"
-#include "uart.h"
+#include "APP.h"
 
-#define DELTA 1
-void SendDummyCommand(void);
-
-int main (void){
-
+int main (void)
+{
+	/* Initialization */
   COMM_Init();
-  UINT8 dly = DELTA;
+
+  APP_Init();
+
+  /* Main Loop */
   for (;;)
   {
 	  COMM_Update();
-	  _delay_ms(10);
-
-	  dly--;
-	  if(!dly)
-	  {
-		  dly = DELTA;
-		  SendDummyCommand();
-	  }
+	  APP_Main();
   }
   return 1;
-}
-
-void SendDummyCommand(void)
-{
-	static UINT16 cnt = 0;
-	S_COMMAND cmd;
-
-	cmd.cmd = 18;
-	cmd.payload = 2;
-	cmd.data[0] = cnt >> 8;
-	cmd.data[1] = cnt & 0xFF;
-
-	COMM_SendCommand(&cmd);
-	cnt++;
 }

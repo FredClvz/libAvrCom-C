@@ -1,21 +1,21 @@
 //------------------------------------------------------------------------------
 //
-// Module : CMD_
+// Module : APP_
 //
-// Description : Commands parser Module Core
+// Description : Application layer main file.
 //
 // F.C.
-// 2014.08.22
+// 2014.10.06
 //
 //------------------------------------------------------------------------------
-#define CMD_M
+#define APP_M
 
 //------------------------------------------------------------------------------
 //                                                                      Includes
 //------------------------------------------------------------------------------
-#include "commands_table.h"
-#include "commands.h"
-#include "comm.h"
+
+#include "APP.h"
+
 //------------------------------------------------------------------------------
 //                                                               Defines & Types
 //------------------------------------------------------------------------------
@@ -24,7 +24,6 @@
 //                                                                     Variables
 //------------------------------------------------------------------------------
 // Note : OBLIGATOIREMENT static
-extern const S_CommandTableElt CommandTable[]; //reference to the lookup table.
 
 //------------------------------------------------------------------------------
 //                                             Prototypes des fonctions internes
@@ -35,31 +34,22 @@ extern const S_CommandTableElt CommandTable[]; //reference to the lookup table.
 //                                                           Fonctions exportees
 //------------------------------------------------------------------------------
 
-/* Search for the callback linked to a given command ID
- * and execute it. Returns Ret_OK if the command exists,
- * Ret_Error otherwise.
- */
-Ret_t CMD_Execute(S_COMMAND* cmd)
+/* App Initialization
+ * Called once at power up. */
+void APP_Init(void)
 {
-	pCommand fPtr = NULL;
-	UINT8 i;
-	if (cmd->eCommandStatus != COMMAND_CHECKED)
-		return RET_ERROR;
 
-	/* look for the command in the table */
-	for (i=0; i < CommandsTableSize && !fPtr; ++i)
-	{
-		if (CommandTable[i].cmd == cmd->cmd)
-		{
-			fPtr = CommandTable[i].fPtr;
-			(*fPtr)(cmd);
-		}
-	}
-	return (fPtr? RET_OK : RET_ERROR);
 }
 
+/* Application main loop */
+void APP_Main(void)
+{
+
+}
+
+
 //------------------------------------------------------------------------------
-//                                                           Fonctions internes
+//                                                            Fonctions internes
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------

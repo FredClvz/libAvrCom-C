@@ -26,16 +26,13 @@
 //Communication - low level
 #define CFG_UART_BAUDRATE         57600  //Bauds
 #define CFG_UART_USE_ISR          YES    //Use interrupts in handling the UART
-#define CFG_UART_TX_BUFFER_SIZE   0    //Bytes
+#define CFG_UART_TX_BUFFER_SIZE   0      //Bytes
 #define CFG_UART_RX_BUFFER_SIZE   20     //Bytes
 
-//Communication - high level
-/*Maximum number of bytes that can be received as the data field in a packet */
+//Communication - higher level
+/* Maximum number of bytes that can be received as the data field in a packet */
 #define CFG_COMM_MAX_CMD_DATA     4      //Bytes
-#define CFG_COMM_CRC_LEN          2     //Bytes
-
-/*Commands IDS*/
-#define CMD_TEST                  0x42
+#define CFG_COMM_CRC_LEN          2      //Bytes
 
 //Sanity checks
 #if defined(CFG_ENABLE_ALL_DEBUG) && defined(CFG_DISABLE_ALL_DEBUG)

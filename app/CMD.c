@@ -2,20 +2,24 @@
 //
 // Module : CMD_
 //
-// Description : Commands parser Module Core
+// Description : Commands for exchanging data.
 //
 // F.C.
-// 2014.08.22
+// 2014.10.06
 //
 //------------------------------------------------------------------------------
-#define CMD_M
+#define APP_CMD_M
 
 //------------------------------------------------------------------------------
 //                                                                      Includes
 //------------------------------------------------------------------------------
-#include "commands_table.h"
-#include "commands.h"
+#include <avr/io.h>
+#include <string.h> //memcpy
+
 #include "comm.h"
+
+#include "CMD.h"
+
 //------------------------------------------------------------------------------
 //                                                               Defines & Types
 //------------------------------------------------------------------------------
@@ -24,7 +28,6 @@
 //                                                                     Variables
 //------------------------------------------------------------------------------
 // Note : OBLIGATOIREMENT static
-extern const S_CommandTableElt CommandTable[]; //reference to the lookup table.
 
 //------------------------------------------------------------------------------
 //                                             Prototypes des fonctions internes
@@ -34,28 +37,35 @@ extern const S_CommandTableElt CommandTable[]; //reference to the lookup table.
 //------------------------------------------------------------------------------
 //                                                           Fonctions exportees
 //------------------------------------------------------------------------------
-
-/* Search for the callback linked to a given command ID
- * and execute it. Returns Ret_OK if the command exists,
- * Ret_Error otherwise.
+/* Test command that will togle the pin13 led
+ * on the arduino UNO.
  */
-Ret_t CMD_Execute(S_COMMAND* cmd)
+void CMD_RX_TestCommand(S_COMMAND* cmd)
 {
-	pCommand fPtr = NULL;
-	UINT8 i;
-	if (cmd->eCommandStatus != COMMAND_CHECKED)
-		return RET_ERROR;
+	S_COMMAND reply;
 
-	/* look for the command in the table */
-	for (i=0; i < CommandsTableSize && !fPtr; ++i)
-	{
-		if (CommandTable[i].cmd == cmd->cmd)
-		{
-			fPtr = CommandTable[i].fPtr;
-			(*fPtr)(cmd);
-		}
-	}
-	return (fPtr? RET_OK : RET_ERROR);
+	DDRB = (1<<DDB5);
+	PORTB ^= (1<<PB5);
+
+	reply.cmd = CMD_TEST;
+	reply.payload = 4;
+	memcpy(reply.data, (UINT8 [4]) {1, 2, 4, 8}, 4 * sizeof(UINT8));
+	COMM_SendCommand(&reply);
+}
+
+//Test command. Send a counter value, incremented each time
+void CMD_TX_SendDummyCommand(void)
+{
+	static UINT16 cnt = 0;
+	S_COMMAND cmd;
+
+	cmd.cmd = 18;
+	cmd.payload = 2;
+	cmd.data[0] = cnt >> 8;
+	cmd.data[1] = cnt & 0xFF;
+
+	COMM_SendCommand(&cmd);
+	cnt++;
 }
 
 //------------------------------------------------------------------------------

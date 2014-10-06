@@ -15,28 +15,27 @@
 #define COMMANDS_TABLE_H_
 
 #include "common.h"
+#include "commands.h"
 
 //------------------------------------------------------------------------------
 //                                                 Command definitions inclusion
 //------------------------------------------------------------------------------
-#include "commands.h"
+#include "CMD.h"
 
 //------------------------------------------------------------------------------
 
-typedef void (*pCommand)(S_COMMAND*);
-
-typedef struct
-{
-	UINT8 cmd;
-	pCommand fPtr;
-}S_CommandTableElt;
 
 /* A command pointed to should have a definition similar to the following:
- * void function(S_COMMAND* cmd)
+ * void function_name (S_COMMAND*)
+ *
+ * To optimize the code execution, a good practice is to put the most used
+ * callbacks at the start of the table, so that the command callback algorithm
+ * finds them rapidly (i.e. without having to walk the whole table)
  */
 const S_CommandTableElt CommandTable[] =
 {
-	{CMD_TEST, &CMD_TestCommand}
+//   Cmd ID,   Callback pointer
+	{CMD_TEST, &CMD_RX_TestCommand}
 };
 
 #define CommandsTableSize (sizeof(CommandTable)/sizeof(CommandTable[0]))

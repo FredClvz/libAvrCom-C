@@ -1,21 +1,21 @@
 //------------------------------------------------------------------------------
 //
-// Module : CMD_
+// Module : APP_
 //
-// Description : Commands Module Core
+// Description : Application layer main file.
 //
 // F.C.
-// 2014.08.22
+// 2014.10.06
 //
 //------------------------------------------------------------------------------
 
 // Multi-inclusion protection
-#ifndef CMD_H
-#define CMD_H
+#ifndef APP_H
+#define APP_H
 
 // Manages prototyping and declarations
 #undef PUBLIC
-#ifdef CMD_M
+#ifdef APP_M
 #define PUBLIC
 #else
 #define PUBLIC extern
@@ -29,30 +29,6 @@
 //------------------------------------------------------------------------------
 //                                                      Defines & Types exportes
 //------------------------------------------------------------------------------
-typedef enum
-{
-	COMMAND_EMPTY = 0,  //No new command, or previous command rejected (bad crc?)
-	COMMAND_NEW,        //Command needs to be checked first (CRC)
-	COMMAND_CHECKED,    //Command is OK. Waiting for treatment.
-} E_COMMAND_STATUS;
-
-typedef struct
-{
-	E_COMMAND_STATUS eCommandStatus;
-	UINT8 cmd;
-	UINT8 payload;
-	UINT8 data[CFG_COMM_MAX_CMD_DATA];
-	UINT8 crc[CFG_COMM_CRC_LEN];
-} S_COMMAND;
-
-typedef void (*pCommand)(S_COMMAND*);
-
-typedef struct
-{
-	UINT8 cmd;
-	pCommand fPtr;
-}S_CommandTableElt;
-
 
 //------------------------------------------------------------------------------
 //                                                           Exported variables
@@ -61,8 +37,8 @@ typedef struct
 //------------------------------------------------------------------------------
 //                                                           Fonctions exportees
 //------------------------------------------------------------------------------
+PUBLIC void APP_Init(void);
+PUBLIC void APP_Main(void);
 
-PUBLIC Ret_t CMD_Execute(S_COMMAND* cmd);
-
-#endif // CMD_H
+#endif // APP_H
 //------------------------------------------------------------------------------
