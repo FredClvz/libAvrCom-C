@@ -38,5 +38,5 @@ const S_CommandTableElt CommandTable[] =
 	{CMD_TEST, &CMD_RX_TestCommand}
 };
 
-#define CommandsTableSize (sizeof(CommandTable)/sizeof(CommandTable[0]))
+#define CommandsTableSize (sizeof(CommandTable)/sizeof(CommandTable[0]))  //Implies that there is at least one element in the table ...
 #endif /* COMMANDS_TABLE_H_ */

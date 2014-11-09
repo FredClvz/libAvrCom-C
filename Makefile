@@ -13,7 +13,6 @@ ARCH         = AVR8
 F_CPU        = 16000000
 OPTIMIZATION = s
 TARGET       = avr-enm
-#test/test_basic.c test/test_uart.c test/test_ringbuff.c
 SRC          =  \
                 sys/uart.c \
                 sys/comm.c \
