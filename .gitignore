@@ -1,14 +1,46 @@
-.DS_Store
-.cproject
-.project
-.settings/
+# Object files
 *.o
-*.d
-*.bin
-*.eep
+*.ko
+*.obj
 *.elf
+*.d
+*.eep
+
+# Precompiled Headers
+*.gch
+*.pch
+
+# Libraries
+*.lib
+*.a
+*.la
+*.lo
+
+# Shared objects (inc. Windows DLLs)
+*.dll
+*.so
+*.so.*
+*.dylib
+
+# Executables
+*.exe
+*.out
+*.app
+*.i*86
+*.x86_64
+*.hex
+*.bin
+
+#Linker files
 *.map
 *.lss
 *.sym
-*.hex
-*.*~
+
+#OSX
+.DS_Store
+
+#Eclipse stuff
+.cproject
+.project
+.settings/
+
